@@ -14,7 +14,7 @@ app.use(session({
 app.set('view engine','hbs')
 
 var MongoClient = require('mongodb').MongoClient;
-var url =  "mongodb+srv://tommy:123456abc@cluster0.lkrga.mongodb.net/test";
+var url =  "mongodb+srv://longbinh:longbinh@cluster0.twvwr.mongodb.net/test";
 
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -42,7 +42,7 @@ app.post('/update',async (req,res)=>{
     const condition = {"_id" : ObjectID(id)};
     
     const client= await MongoClient.connect(url);
-    const dbo = client.db("DoQuocBinhDB");
+    const dbo = client.db("BinhDB");
     await dbo.collection("SanPham").updateOne(condition,newValues);
     res.redirect('/view');
 })
@@ -52,7 +52,7 @@ app.get('/delete',async (req,res)=>{
     const condition = {"_id" : ObjectID(id)};
 
     const client= await MongoClient.connect(url);
-    const dbo = client.db("DoQuocBinhDB");
+    const dbo = client.db("BinhDB");
     const productToDelete = await dbo.collection("SanPham").findOne(condition);
     const index = dsNotToDelete.findIndex((e)=>e==productToDelete.name);
     if (index !=-1) {
@@ -69,7 +69,7 @@ app.get('/edit',async (req,res)=>{
     const condition = {"_id" : ObjectID(id)};
 
     const client= await MongoClient.connect(url);
-    const dbo = client.db("DoQuocBinhDB");
+    const dbo = client.db("BinhDB");
     const productToEdit = await dbo.collection("SanPham").findOne(condition);
     res.render('edit',{product:productToEdit})
 })
