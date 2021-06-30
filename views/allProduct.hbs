@@ -10,6 +10,7 @@
     <title>All products</title>
 </head>
 <body>
+    <h2>{{username}}</h2>
    <form method="POST" action="/search">
         <input type="text" name="txtName">
         <input type="submit" value="Search">
@@ -19,6 +20,7 @@
            <tr>
                <th>Name</th>
                <th>Price</th>
+               <th>Image</th>
                <th>Edit</th>
                <th>Delete</th>
            </tr>
@@ -28,6 +30,7 @@
            <tr>
                 <td>{{name}}</td>
                 <td>{{price}}</td>
+                <td><img src="{{imgUrl}}" width="150px" height="100px"></td>
                  <td><a href="/edit?id={{_id}}">Edit</a></td>
                 <td><a href="/delete?id={{_id}}" onclick="return confirm('Are you sure')">Delete</a></td>
             </tr>

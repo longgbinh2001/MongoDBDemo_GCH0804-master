@@ -1,7 +1,16 @@
 const express = require('express')
 const hbs = require('hbs')
+const session = require('express-session');
+
 
 var app = express();
+
+app.use(session({
+    resave: true, 
+    saveUninitialized: true, 
+    secret: 'abcc##$$0911233$%%%32222', 
+    cookie: { maxAge: 60000 }}));
+
 app.set('view engine','hbs')
 
 var MongoClient = require('mongodb').MongoClient;
@@ -12,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static('public'))
 
-var dsNotToDelete = ['ao','quan','bep','my goi'];
+var dsNotToDelete = ['o to', 'xe may'];
 
 const dbHandler = require('./databaseHandler')
 
@@ -67,22 +76,52 @@ app.get('/edit',async (req,res)=>{
 
 app.get('/view',async (req,res)=>{
     const results =  await dbHandler.searchSanPham('',"SanPham");
-    res.render('allProduct',{model:results})
+    var userName ='Not logged In';
+    if(req.session.username){
+        userName = req.session.username;
+    }
+    res.render('allProduct',{model:results,username:userName})
 })
 
 app.post('/doInsert', async (req,res)=>{
-    var nameInput = req.body.txtName;
-    var priceInput = req.body.txtPrice;
-    var newProduct = {name:nameInput, price:priceInput, size : {dai:20, rong:40}}
+    const nameInput = req.body.txtName;
+    const priceInput = req.body.txtPrice;
+    const imgURLInput = req.body.imgURL;
+    const newProduct = {name:nameInput, price:priceInput,imgUrl:imgURLInput, size : {dai:20, rong:40}}
     await dbHandler.insertOneIntoCollection(newProduct,"SanPham");
     res.render('index')
+})
+app.get('/register',(req,res)=>{
+    res.render('register')
+})
+app.post('/login',async (req,res)=>{
+    const nameInput = req.body.txtName;
+    const passInput = req.body.txtPassword;
+    const found = await dbHandler.checkUser(nameInput,passInput);
+    if(found){
+        req.session.username = nameInput;
+        res.render('index',{loginName:nameInput})       
+    }else{
+        res.render('index',{errorMsg:"Login failed!"})
+    }
+})
+app.post('/doRegister',async (req,res)=>{
+    const nameInput = req.body.txtName;
+    const passInput = req.body.txtPassword;
+    const newUser = {username:nameInput,password:passInput};
+    await dbHandler.insertOneIntoCollection(newUser,"users");
+    res.redirect('/');
 })
 app.get('/insert',(req,res)=>{
     res.render('insert')
 })
 
 app.get('/',(req,res)=>{
-    res.render('index')
+    var userName ='Not logged In';
+    if(req.session.username){
+        userName = req.session.username;
+    }
+    res.render('index',{loginName:userName})
 })
 
 var PORT = process.env.PORT || 5000;
