@@ -7,14 +7,21 @@
      <link rel="stylesheet" href="css/mystyle.css">
     <title>Index Page</title>
 </head>
+<style>
+     body{
+         background-image: url(https://thumbor.forbes.com/thumbor/trim/61x0:3830x2513/fit-in/711x474/smart/https://specials-images.forbesimg.com/imageserve/5dde81cdea103f0006538749/0x0.jpg);
+         background-size: cover;
+        background-repeat: no-repeat;
+    }   
+ </style>
 <body>
     <center>
         <div>
-           <h1>Car Store</h1> 
+           <h1>Toy Store</h1> 
 
         </div>
-        <img src="pics/banxe.jpg" width="400px" height="300px"/>
-    <h2 class="redText">Welcome {{loginName}}</h2>
+       
+    <h2>Welcome {{loginName}}</h2>
     
     <form action="/login" method="post">
         User Name <input type="text" name="txtName">
